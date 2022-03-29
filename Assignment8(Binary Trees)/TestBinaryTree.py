@@ -33,20 +33,20 @@ class Node(object):
         if self.lChild:
             self.lChild.print_node(level + 1)
     
-    def get_level(self, level, ls):
+    def get_level(self, level, lvl_lst):
         #check if level == 0 if True return current.data
         temp_lvl = level
         current = self
         if temp_lvl == 0:
-            ls += [current.data]
+            lvl_lst += [current.data]
         else:
             if not current.lChild and not current.rChild and level != 0:
-                ls+=[]
+                lvl_lst += []
             if temp_lvl != 0 and current.lChild:
-                current.lChild.get_level(temp_lvl - 1, ls)
+                current.lChild.get_level(temp_lvl - 1, lvl_lst)
             temp_lvl = level
             if temp_lvl != 0 and current.rChild:
-                current.rChild.get_level(temp_lvl - 1, ls)
+                current.rChild.get_level(temp_lvl - 1, lvl_lst)
     
     def get_height(self):
         if self.lChild is not None and self.rChild is not None:
@@ -132,19 +132,24 @@ class Tree(object):
     
     # Returns a list of nodes at a given level from left to right
     def get_level(self, level):
-        ls = []
-        self.root.get_level(level, ls)
-        return ls
+        lvl_lst = []
+        self.root.get_level(level,lvl_lst)
+        return lvl_lst
     
     # # Returns the list of the node that you see from left side
     # # The order of the output should be from top to down
     def left_side_view(self):
-
+        left_lst = []
+        for level in range(self.get_height()):
+            left_lst += [self.get_level(level)[0]]
+        return left_lst
+        
+         
 
     # # returns the sum of the value of all leaves.
     # # a leaf node does not have any children.
-    # def sum_leaf_nodes(self):
-    #     pass
+    def sum_leaf_nodes(self):
+        pass
 
 
 def make_tree(data):
@@ -161,11 +166,12 @@ def main():
     a = Tree()
     # for i in range(12,20):
     #     a.insert((i))
-    r = [55, 8, 70, 2, 25, 63, 75, 90]
+    r = [55, 8, 70, 2, 25, 63, 75, 68, 73, 80, 79]
     for i in r:
         a.insert((i))
     a.print(1)
-    print(a.get_level(0))
+    print(a.get_level(2))
+    print(a.left_side_view())
     
     # Create three trees - two are the same and the third is different
     # line = sys.stdin.readline()
