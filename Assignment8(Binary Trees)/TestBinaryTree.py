@@ -34,11 +34,10 @@ class Node(object):
             self.lChild.print_node(level + 1)
     
     def get_level(self, level, lvl_lst):
-        #check if level == 0 if True return current.data
         temp_lvl = level
         current = self
         if temp_lvl == 0:
-            lvl_lst += [current.data]
+            lvl_lst += [current]
         else:
             if not current.lChild and not current.rChild and level != 0:
                 lvl_lst += []
@@ -125,23 +124,27 @@ class Tree(object):
         #for case when tree only has left branch
         if current.lChild:
             max = current.data
-            while current.lChildChild:
+            while current.lChild:
                 current = current.lChild
             min = current.data
             return max - min
     
     # Returns a list of nodes at a given level from left to right
     def get_level(self, level):
+        if not self.root:
+            return []
         lvl_lst = []
-        self.root.get_level(level,lvl_lst)
+        self.root.get_level(level, lvl_lst)
         return lvl_lst
     
     # # Returns the list of the node that you see from left side
     # # The order of the output should be from top to down
     def left_side_view(self):
+        if not self.root:
+            return []
         left_lst = []
         for level in range(self.get_height()):
-            left_lst += [self.get_level(level)[0]]
+            left_lst += [self.get_level(level)[0].data]
         return left_lst
         
          
@@ -166,12 +169,13 @@ def main():
     a = Tree()
     # for i in range(12,20):
     #     a.insert((i))
-    r = [55, 8, 70, 2, 25, 63, 75, 68, 73, 80, 79]
+    # r = [55, 8, 70, 2, 25, 63, 75, 68, 73, 80, 79]
+    r = [1,2,3,4,5]
     for i in r:
         a.insert((i))
-    a.print(1)
-    print(a.get_level(2))
-    print(a.left_side_view())
+    #a.print(1)
+    print(a.get_level(3))
+    #print(a.left_side_view())
     
     # Create three trees - two are the same and the third is different
     # line = sys.stdin.readline()
