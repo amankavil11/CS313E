@@ -16,45 +16,44 @@
 
 import sys
 
-class Node (object):
+class Node(object):
     # constructor
     def __init__(self, data):
         self.data = data
         self.lChild = None
         self.rChild = None
-
+    
     def print_node(self, level=0):
-
-        if self.rChild != None:
+        
+        if self.rChild:
             self.rChild.print_node(level + 1)
         
-
         print(' ' * 3 * level + '->', self.data)
-
-        if self.lChild != None:
+        
+        if self.lChild:
             self.lChild.print_node(level + 1)
     
-    def get_level(self, level):
+    def get_level(self, level, ls):
         #check if level == 0 if True return current.data
         temp_lvl = level
         current = self
         if temp_lvl == 0:
-            print(current.data)
+            ls += [current.data]
         else:
             if not current.lChild and not current.rChild and level != 0:
-                print("xxx")
+                ls+=[]
             if temp_lvl != 0 and current.lChild:
-                current.lChild.get_level(temp_lvl - 1)
+                current.lChild.get_level(temp_lvl - 1, ls)
             temp_lvl = level
             if temp_lvl != 0 and current.rChild:
-                current.rChild.get_level(temp_lvl - 1)
-
+                current.rChild.get_level(temp_lvl - 1, ls)
+    
     def get_height(self):
-        if self.lChild != None and self.rChild != None:
+        if self.lChild is not None and self.rChild is not None:
             return 1 + max(self.lChild.get_height(), self.rChild.get_height())
-        elif self.lChild != None:
+        elif self.lChild is not None:
             return 1 + self.lChild.get_height()
-        elif self.rChild != None:
+        elif self.rChild is not None:
             return 1 + self.rChild.get_height()
         else:
             return 1
@@ -64,13 +63,13 @@ class Tree(object):
     # constructor
     def __init__(self):
         self.root = None
-
+    
     def print(self, level):
         self.root.print_node(level)
-
+    
     def get_height(self):
         return self.root.get_height()
-
+    
     # Inserts data into Binary Search Tree and creates a valid BST
     def insert(self, data):
         new_node = Node(data)
@@ -93,7 +92,7 @@ class Tree(object):
             else:
                 parent.rChild = new_node
             return
-
+    
     # Returns the range of values stored in a binary search tree of integers.
     # The range of values equals the maximum value in the binary search tree minus the minimum value.
     # If there is one value in the tree the range is 0. If the tree is empty the range is undefined.
@@ -130,22 +129,18 @@ class Tree(object):
                 current = current.lChild
             min = current.data
             return max - min
-            
-            
-
+    
     # Returns a list of nodes at a given level from left to right
     def get_level(self, level):
-        lvl_list = []
-        lvl_list.append(self.root.get_level(level))
-        return lvl_list
+        ls = []
+        self.root.get_level(level, ls)
+        return ls
     
-
-
     # # Returns the list of the node that you see from left side
     # # The order of the output should be from top to down
-    # def left_side_view(self):
-    #
-    #
+    def left_side_view(self):
+
+
     # # returns the sum of the value of all leaves.
     # # a leaf node does not have any children.
     # def sum_leaf_nodes(self):
@@ -166,11 +161,11 @@ def main():
     a = Tree()
     # for i in range(12,20):
     #     a.insert((i))
-    r = [55,8,70,2,25,63,75,90]
+    r = [55, 8, 70, 2, 25, 63, 75, 90]
     for i in r:
         a.insert((i))
     a.print(1)
-    (a.get_level(2))
+    print(a.get_level(0))
     
     # Create three trees - two are the same and the third is different
     # line = sys.stdin.readline()
@@ -184,6 +179,7 @@ def main():
     # print("Tree left side view is: ", t1.left_side_view())
     # print("Sum of leaf nodes is: ", t1.sum_leaf_nodes())
     # print("##########################")
+
 
 # # Another Tree for test.
 #     line = sys.stdin.readline()
@@ -213,6 +209,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
