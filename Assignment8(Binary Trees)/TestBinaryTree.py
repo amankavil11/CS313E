@@ -16,6 +16,7 @@
 
 import sys
 
+
 class Node(object):
     # constructor
     def __init__(self, data):
@@ -33,17 +34,22 @@ class Node(object):
         if self.lChild:
             self.lChild.print_node(level + 1)
     
+    #helper method to recursively return the node at a specific level
     def get_level(self, level, lvl_lst):
         temp_lvl = level
         current = self
+        #if at the original given level return the node at that level
         if temp_lvl == 0:
             lvl_lst += [current]
         else:
+            #subtree ends before reaching given level
             if not current.lChild and not current.rChild and level != 0:
                 lvl_lst += []
+            #dive one more level left recursively towards the given level
             if temp_lvl != 0 and current.lChild:
                 current.lChild.get_level(temp_lvl - 1, lvl_lst)
             temp_lvl = level
+            #dive one more level right recursively towards the given level
             if temp_lvl != 0 and current.rChild:
                 current.rChild.get_level(temp_lvl - 1, lvl_lst)
     
@@ -72,14 +78,14 @@ class Tree(object):
     # Inserts data into Binary Search Tree and creates a valid BST
     def insert(self, data):
         new_node = Node(data)
-        if self.root == None:
+        if self.root is None:
             self.root = new_node
             return
         else:
             parent = self.root
             curr = self.root
             # finds location to insert new node
-            while curr != None:
+            while curr is not None:
                 parent = curr
                 if data < curr.data:
                     curr = curr.lChild
@@ -129,30 +135,44 @@ class Tree(object):
             min = current.data
             return max - min
     
-    # Returns a list of nodes at a given level from left to right
+    # Returns a list of nodes(not values) at a given level from left to right
     def get_level(self, level):
+        #empy tree then return empty list
         if not self.root:
             return []
         lvl_lst = []
+        #use helper method from Node class
         self.root.get_level(level, lvl_lst)
         return lvl_lst
     
-    # # Returns the list of the node that you see from left side
+    # # Returns the list of the node VALUE that you see from left side
     # # The order of the output should be from top to down
     def left_side_view(self):
+        #uses get_level() and returns its first element per level because get_level() list runs from left to right
         if not self.root:
             return []
         left_lst = []
         for level in range(self.get_height()):
             left_lst += [self.get_level(level)[0].data]
         return left_lst
-        
-         
-
-    # # returns the sum of the value of all leaves.
-    # # a leaf node does not have any children.
+    
+    # returns the sum of the value of all leaves.
+    # a leaf node does not have any children.
     def sum_leaf_nodes(self):
-        pass
+        #if empty tree return 0
+        if not self.root:
+            return 0
+        #create left tree in order to perform recursion
+        left = Tree()
+        left.root = self.root.lChild
+        #create right tree in order to perform recursion
+        right = Tree()
+        right.root = self.root.rChild
+        #if at leaf return its value
+        if not right.root and not left.root:
+            return self.root.data
+        #sum leafs from left and right side
+        return left.sum_leaf_nodes() + right.sum_leaf_nodes()
 
 
 def make_tree(data):
@@ -169,52 +189,53 @@ def main():
     a = Tree()
     # for i in range(12,20):
     #     a.insert((i))
-    # r = [55, 8, 70, 2, 25, 63, 75, 68, 73, 80, 79]
-    r = [1,2,3,4,5]
+    r = [55, 8, 70, 2, 25, 63, 75, 68, 73, 80, 79]
+    #r = [55]
     for i in r:
-        a.insert((i))
-    #a.print(1)
-    print(a.get_level(3))
-    #print(a.left_side_view())
+        a.insert(i)
+    a.print(1)
+    #print(a.get_level(3))
+    print(a.left_side_view())
+    print(a.sum_leaf_nodes())
     
-    # Create three trees - two are the same and the third is different
-    # line = sys.stdin.readline()
-    # line = line.strip()
-    # line = line.split()
-    # tree1_input = list(map(int, line)) 	# converts elements into ints
-    # t1 = make_tree(tree1_input)
-    # t1.print(t1.get_height())
-    #
-    # print("Tree range is: ",   t1.range())
-    # print("Tree left side view is: ", t1.left_side_view())
-    # print("Sum of leaf nodes is: ", t1.sum_leaf_nodes())
-    # print("##########################")
+    #Create three trees - two are the same and the third is different
+    line = sys.stdin.readline()
+    line = line.strip()
+    line = line.split()
+    tree1_input = list(map(int, line)) 	# converts elements into ints
+    t1 = make_tree(tree1_input)
+    t1.print(t1.get_height())
+
+    print("Tree range is: ",   t1.range())
+    print("Tree left side view is: ", t1.left_side_view())
+    print("Sum of leaf nodes is: ", t1.sum_leaf_nodes())
+    print("##########################")
 
 
-# # Another Tree for test.
-#     line = sys.stdin.readline()
-#     line = line.strip()
-#     line = line.split()
-#     tree2_input = list(map(int, line)) 	# converts elements into ints
-#     t2 = make_tree(tree2_input)
-#     t2.print(t2.get_height())
-#
-#     print("Tree range is: ",   t2.range())
-#     print("Tree left side view is: ", t2.left_side_view())
-#     print("Sum of leaf nodes is: ", t2.sum_leaf_nodes())
-#     print("##########################")
-# # Another Tree
-#     line = sys.stdin.readline()
-#     line = line.strip()
-#     line = line.split()
-#     tree3_input = list(map(int, line)) 	# converts elements into ints
-#     t3 = make_tree(tree3_input)
-#     t3.print(t3.get_height())
-#
-#     print("Tree range is: ",   t3.range())
-#     print("Tree left side view is: ", t3.left_side_view())
-#     print("Sum of leaf nodes is: ", t3.sum_leaf_nodes())
-#     print("##########################")
+# Another Tree for test.
+    line = sys.stdin.readline()
+    line = line.strip()
+    line = line.split()
+    tree2_input = list(map(int, line)) 	# converts elements into ints
+    t2 = make_tree(tree2_input)
+    t2.print(t2.get_height())
+
+    print("Tree range is: ",   t2.range())
+    print("Tree left side view is: ", t2.left_side_view())
+    print("Sum of leaf nodes is: ", t2.sum_leaf_nodes())
+    print("##########################")
+# Another Tree
+    line = sys.stdin.readline()
+    line = line.strip()
+    line = line.split()
+    tree3_input = list(map(int, line)) 	# converts elements into ints
+    t3 = make_tree(tree3_input)
+    t3.print(t3.get_height())
+
+    print("Tree range is: ",   t3.range())
+    print("Tree left side view is: ", t3.left_side_view())
+    print("Sum of leaf nodes is: ", t3.sum_leaf_nodes())
+    print("##########################")
 
 
 if __name__ == "__main__":
